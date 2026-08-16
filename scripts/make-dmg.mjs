@@ -11,11 +11,9 @@ import { join } from 'node:path';
 
 const DIST = new URL('../dist/', import.meta.url).pathname;
 const VOLUME = 'Surf Messenger';
-/** Where electron-builder leaves each arch, and the suffix that names the download. */
-const BUILDS = [
-  { dir: 'mac-arm64', suffix: 'arm64' },
-  { dir: 'mac', suffix: 'x64' },
-];
+/** One universal download: a Mac browser reports "Intel Mac OS X" whatever the chip is, so a
+ *  per-architecture link would hand half of them an app that cannot start. */
+const BUILDS = [{ dir: 'mac-universal', suffix: 'universal' }];
 
 const run = (cmd, args) => execFileSync(cmd, args, { stdio: ['ignore', 'pipe', 'pipe'] });
 
