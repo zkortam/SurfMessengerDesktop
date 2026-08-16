@@ -13,23 +13,45 @@
   },
   "devDependencies": {
     "electron": "^33.2.0",
-    "electron-builder": "^25.1.8"
+    "electron-builder": "^25.1.8",
+    "sharp": "^0.35.3"
   },
   "build": {
     "appId": "org.surfplatforms.messenger",
     "productName": "Surf Messenger",
-    "directories": { "output": "dist" },
-    "files": ["src/**/*", "build/icon.png"],
+    "directories": {
+      "output": "dist"
+    },
+    "files": [
+      "src/**/*",
+      "build/icon.png"
+    ],
     "mac": {
       "category": "public.app-category.social-networking",
-      "target": [{ "target": "dir", "arch": ["universal"] }],
+      "target": [
+        {
+          "target": "dir",
+          "arch": [
+            "universal"
+          ]
+        }
+      ],
       "icon": "build/icon.png",
       "darkModeSupport": true,
       "identity": null
     },
-    "dmg": { "title": "Surf Messenger" },
+    "dmg": {
+      "title": "Surf Messenger"
+    },
     "win": {
-      "target": [{ "target": "nsis", "arch": ["x64"] }],
+      "target": [
+        {
+          "target": "nsis",
+          "arch": [
+            "x64"
+          ]
+        }
+      ],
       "icon": "build/icon.png"
     }
   }
