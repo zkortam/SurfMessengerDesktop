@@ -1,58 +1,22 @@
 {
-  "name": "surf-messenger-desktop",
-  "productName": "Surf Messenger",
+  "name": "surf-desktop",
+  "productName": "Surf Desktop",
   "version": "1.0.0",
-  "description": "Surf Messenger for the desktop",
+  "description": "Surf and Surf Messenger for the desktop",
   "author": "Surf Platforms Inc.",
   "homepage": "https://surfmessenger.com",
   "main": "src/main.js",
   "private": true,
   "scripts": {
     "start": "electron .",
-    "build:mac": "electron-builder --mac --publish never"
+    "build:messenger:mac": "node scripts/build.mjs messenger mac",
+    "build:messenger:win": "node scripts/build.mjs messenger win",
+    "build:surf:mac": "node scripts/build.mjs surf mac",
+    "build:surf:win": "node scripts/build.mjs surf win"
   },
   "devDependencies": {
     "electron": "^33.2.0",
     "electron-builder": "^25.1.8",
     "sharp": "^0.35.3"
-  },
-  "build": {
-    "appId": "org.surfplatforms.messenger",
-    "productName": "Surf Messenger",
-    "directories": {
-      "output": "dist"
-    },
-    "files": [
-      "src/**/*",
-      "build/icon.png"
-    ],
-    "mac": {
-      "category": "public.app-category.social-networking",
-      "target": [
-        {
-          "target": "dir",
-          "arch": [
-            "universal"
-          ]
-        }
-      ],
-      "icon": "build/icon.png",
-      "darkModeSupport": true,
-      "identity": null
-    },
-    "dmg": {
-      "title": "Surf Messenger"
-    },
-    "win": {
-      "target": [
-        {
-          "target": "nsis",
-          "arch": [
-            "x64"
-          ]
-        }
-      ],
-      "icon": "build/icon.png"
-    }
   }
 }

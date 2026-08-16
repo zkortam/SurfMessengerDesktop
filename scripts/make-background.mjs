@@ -1,5 +1,5 @@
 /**
- * Draws the backdrop of the mounted DMG window: the ground the app icon and the Applications
+ * Draws the backdrop of the mounted disk image: the ground the app icon and the Applications
  * folder sit on, and the arrow between them that says what to do with them.
  */
 import sharp from 'sharp';
@@ -15,7 +15,6 @@ export const SLOTS = { app: { x: 168, y: 188 }, applications: { x: 472, y: 188 }
  *  both icon labels for a light ground, and on a dark one the folder someone is aiming at
  *  disappears into it. The brand shows in the app icon, which is the thing being dragged. */
 const PLATE = '#f4f3f8';
-const BRAND = '#5c28b7';
 const ARROW = '#1c1b22';
 
 /** Clear of both icons, which are 128px wide and labelled underneath. */
@@ -24,11 +23,11 @@ const ARROW_END = SLOTS.applications.x - 92;
 const ARROW_Y = SLOTS.app.y;
 const HEAD = 13;
 
-const backdrop = ({ width, height }) => `
+const backdrop = (tint, { width, height }) => `
 <svg xmlns="http://www.w3.org/2000/svg" width="${width}" height="${height}" viewBox="0 0 ${WINDOW.width} ${WINDOW.height}">
   <defs>
     <radialGradient id="glow" cx="0.5" cy="0.42" r="0.62">
-      <stop offset="0" stop-color="${BRAND}" stop-opacity="0.10"/>
+      <stop offset="0" stop-color="${tint}" stop-opacity="0.10"/>
       <stop offset="1" stop-color="${PLATE}" stop-opacity="0"/>
     </radialGradient>
   </defs>
@@ -40,18 +39,20 @@ const backdrop = ({ width, height }) => `
   </g>
 </svg>`;
 
-const png = (scale, out) => sharp(Buffer.from(backdrop({
-  width: WINDOW.width * scale,
-  height: WINDOW.height * scale,
-}))).png({ compressionLevel: 9 }).toFile(out);
+/** Writes background.tiff next to the build, carrying both renderings: one TIFF is how Finder is
+ *  told a backdrop has a retina version. */
+export async function makeBackground(product, dir) {
+  mkdirSync(dir, { recursive: true });
+  const png = (scale, out) => sharp(Buffer.from(backdrop(product.tint, {
+    width: WINDOW.width * scale,
+    height: WINDOW.height * scale,
+  }))).png({ compressionLevel: 9 }).toFile(out);
 
-const DIR = new URL('../build/', import.meta.url).pathname;
-mkdirSync(DIR, { recursive: true });
-await png(1, `${DIR}background.png`);
-await png(2, `${DIR}background@2x.png`);
-// One TIFF carrying both, which is how Finder is told a backdrop has a retina rendering.
-execFileSync('tiffutil', [
-  '-cathidpicheck', `${DIR}background.png`, `${DIR}background@2x.png`,
-  '-out', `${DIR}background.tiff`,
-]);
-console.log(`background.tiff  ${WINDOW.width}x${WINDOW.height} @1x and @2x`);
+  await png(1, `${dir}/background.png`);
+  await png(2, `${dir}/background@2x.png`);
+  execFileSync('tiffutil', [
+    '-cathidpicheck', `${dir}/background.png`, `${dir}/background@2x.png`,
+    '-out', `${dir}/background.tiff`,
+  ]);
+  return `${dir}/background.tiff`;
+}
